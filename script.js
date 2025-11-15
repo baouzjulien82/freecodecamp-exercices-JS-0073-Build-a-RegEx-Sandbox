@@ -23,5 +23,18 @@ return isFlag;
 
 testButton.addEventListener('click', () => {
   let isFlag = getFlags();
-  console.log(`/${regexPattern.value}/${isFlag}`);
+  let pattern = regexPattern.value;
+
+  try {
+    let regex = new RegExp(pattern, isFlag);
+    if (regex.test(stringToTest.textContent)) {
+      console.log('ok');
+      stringToTest.innerHTML = `<span class="highlight">${stringToTest.textContent}</span>`
+    } else {
+      console.log('pas ok');
+    }
+  } catch (e) {
+    console.log(`Erreur dans le motif : ${e.message}`);
+  }
 });
+
