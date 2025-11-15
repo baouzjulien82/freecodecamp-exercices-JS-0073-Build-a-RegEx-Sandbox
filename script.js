@@ -7,34 +7,26 @@ const caseInsensitiveFlag = document.getElementById('i');
 const globalFlag = document.getElementById('g'); 
 
 // fonction getFlags
+const getFlags = () =>
+  (caseInsensitiveFlag.checked ? "i" : "") + (globalFlag.checked ? "g" : "");
 
-const getFlags = () => {
-let isFlag = "";
-if(caseInsensitiveFlag.checked) {
-  isFlag += "i";
-};
-if(globalFlag.checked) {
-  isFlag += "g";
-};
-return isFlag;
-};
-
-// addEvent Test
-
-testButton.addEventListener('click', () => {
-  let isFlag = getFlags();
-  let pattern = regexPattern.value;
+testButton.addEventListener("click", () => {
+  const flags = getFlags();
+  const pattern = regexPattern.value;
+  const inputText = stringToTest.textContent;
 
   try {
-    let regex = new RegExp(pattern, isFlag);
-    if (regex.test(stringToTest.textContent)) {
-      console.log('ok');
-      stringToTest.innerHTML = `<span class="highlight">${stringToTest.textContent}</span>`
-    } else {
-      console.log('pas ok');
-    }
+    const regex = new RegExp(pattern, flags);
+    const hasMatch = regex.test(inputText);
+
+    testResult.textContent = hasMatch ? "ok" : "pas ok";
+    testResult.style.backgroundColor = hasMatch ? "lightgreen" : "#f88";
+
+    stringToTest.innerHTML = hasMatch
+      ? inputText.replace(regex, m => `<span class="highlight">${m}</span>`)
+      : inputText;
   } catch (e) {
-    console.log(`Erreur dans le motif : ${e.message}`);
+    testResult.textContent = `Erreur : ${e.message}`;
+    testResult.style.backgroundColor = "#fdd835";
   }
 });
-
