@@ -17,16 +17,24 @@ testButton.addEventListener("click", () => {
 
   try {
     const regex = new RegExp(pattern, flags);
-    const hasMatch = regex.test(inputText);
+    const matches = inputText.match(regex); // récupère toutes les correspondances
 
-    testResult.textContent = hasMatch ? "ok" : "pas ok";
-    testResult.style.backgroundColor = hasMatch ? "lightgreen" : "#f88";
+    if (matches) {
+      // Surlignage dans le texte
+      const highlighted = inputText.replace(regex, m => `<span class="highlight">${m}</span>`);
+      stringToTest.innerHTML = highlighted;
 
-    stringToTest.innerHTML = hasMatch
-      ? inputText.replace(regex, m => `<span class="highlight">${m}</span>`)
-      : inputText;
+      // Affichage des occurrences trouvées
+      testResult.textContent = `${matches.join(", ")}`;
+      testResult.style.backgroundColor = "lightgreen";
+    } else {
+      stringToTest.innerHTML = inputText;
+      testResult.textContent = "no match";
+      testResult.style.backgroundColor = "#f88";
+    }
   } catch (e) {
     testResult.textContent = `Erreur : ${e.message}`;
     testResult.style.backgroundColor = "#fdd835";
   }
 });
+
